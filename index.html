@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me</title>
+
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <nav>
+      <h1 class="logo">Katerina Korre</h1>
+      <ul class="nav-links">
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="publications.html">Publications</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="thoughts.html">Thoughts</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- About Section -->
+  <section id="about">
+    <div class="about-container">
+      <img src="my_photo.jpeg" alt="My Photo" class="profile-photo">
+      <div class="about-text">
+        <h2>About Me</h2>
+        <p>Γεια σας! I’m Katerina, a post-doc researcher currently at <a href="https://archimedesai.gr/en/" target="_blank">Archimedes Research Unit</a> in Athens, Greece, specializing in Computational Linguistics.</p>
+
+        <p>Last June, I successfully defended my PhD thesis at the University of Bologna under the supervision of Alberto Barrón-Cedeño. My research focused on Hate Speech Detection, and in particular 
+        the problem of the definition, guideline construction, and data labeling. If you stumble upon my thesis, don't forget to play <a href="https://katkorre.github.io/thesis_quest/" target="_blank">my interactive 
+        acknowledgments game</a> where I go around virtually thanking the people that helped me in that journey.</p> 
+
+        <p>My (current) research interests mainly involve computational phraseology and pragmatics, as well as discussion moderation and facilitation. I will also let you in on my little dark secret: 
+        Every time I do research, there is always a little voice in my head whispering <i>"Make it cross-lingual..."</i>.</p>
+
+        <p>Feel free to check out the <a href="thoughts.html" class="button-link">Thoughts</a> tab, where I occasionally write about my academic experiences, as well as my hobbies: languages, pottery, books, movies, and plants :)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proverb Section -->
+  <section id="proverb-section">
+    <div class="section-container">
+      <h2>Proverb of the Week</h2>
+
+      <div class="proverb-card">
+        <p class="proverb-text">“A smooth sea never made a skilled sailor.”</p>
+
+        <div class="poll">
+          <p>How does this proverb feel to you?</p>
+          <button class="vote-btn" onclick="vote('positive')">😊 Positive</button>
+          <button class="vote-btn" onclick="vote('negative')">😕 Negative</button>
+        </div>
+
+        <div id="poll-results" class="poll-results" style="display: none;">
+          <p>Results:</p>
+          <p>Positive: <span id="positive-count">0</span></p>
+          <p>Negative: <span id="negative-count">0</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Useful Links Section -->
+  <section id="useful-links">
+    <div class="section-container">
+      <h3>Useful Links</h3>
+      <div class="links-container">
+        <a href="https://orcid.org/0000-0002-9349-9554" target="_blank" title="ORCID">
+          <i class="fab fa-orcid"></i> ORCID
+        </a>
+        <a href="https://github.com/katkorre" target="_blank" title="GitHub">
+          <i class="fab fa-github"></i> GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/katerina-korre-69a384149/" target="_blank" title="LinkedIn">
+          <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="https://x.com/auto_korre_ct?s=21" target="_blank" title="X">
+          <i class="fab fa-x"></i> X
+        </a>
+        <a href="mailto:k.korre@athenarc.gr" title="Email">
+          <i class="fas fa-envelope"></i> k.korre@athenarc.gr
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- JavaScript -->
+  <script>
+    let positiveVotes = 0;
+    let negativeVotes = 0;
+
+    function vote(type) {
+      if (type === 'positive') positiveVotes++;
+      else negativeVotes++;
+
+      // Show results
+      document.getElementById('poll-results').style.display = 'block';
+      document.getElementById('positive-count').textContent = positiveVotes;
+      document.getElementById('negative-count').textContent = negativeVotes;
+    }
+  </script>
+
+  <footer>
+    <p>© 2025 Katerina Korre — Built with ❤️ and GitHub Pages</p>
+  </footer>
+  
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+<script>
+// Your Firebase config goes here:
+const firebaseConfig = {
+  // PASTE YOUR CONFIG HERE
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Proverb rotation
+const proverbs = [
+  "A smooth sea never made a skilled sailor.",
+  "When one door closes, another opens.",
+  "Knowledge is power.",
+  "Every cloud has a silver lining.",
+  "The beginning is always today."
+];
+
+function getWeekNumber() {
+  const now = new Date();
+  const yearStart = new Date(now.getFullYear(), 0, 1);
+  return Math.floor((now - yearStart) / (1000 * 60 * 60 * 24 * 7));
+}
+
+const weekNumber = getWeekNumber();
+const proverbIndex = weekNumber % proverbs.length;
+const currentProverb = proverbs[proverbIndex];
+
+document.querySelector(".proverb-text").textContent = currentProverb;
+
+// Load votes from Firestore
+db.collection("proverbs").doc(String(weekNumber)).get().then(doc => {
+  if (doc.exists) {
+    document.getElementById("positive-count").textContent = doc.data().positiveVotes;
+    document.getElementById("negative-count").textContent = doc.data().negativeVotes;
+  } else {
+    // Create a new document for this week
+    db.collection("proverbs").doc(String(weekNumber)).set({
+      text: currentProverb,
+      positiveVotes: 0,
+      negativeVotes: 0
+    });
+  }
+});
+
+// Voting function
+function vote(type) {
+  const docRef = db.collection("proverbs").doc(String(weekNumber));
+
+  db.runTransaction(async (transaction) => {
+    const doc = await transaction.get(docRef);
+    let data = doc.data();
+
+    if (type === "positive") data.positiveVotes++;
+    else data.negativeVotes++;
+
+    transaction.update(docRef, data);
+
+    document.getElementById("positive-count").textContent = data.positiveVotes;
+    document.getElementById("negative-count").textContent = data.negativeVotes;
+    document.getElementById("poll-results").style.display = "block";
+  });
+}
+</script>
+  
+
+</body>
+</html>
