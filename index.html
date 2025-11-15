@@ -50,22 +50,75 @@
   <section id="proverb-section">
     <div class="section-container">
       <h2>Proverb of the Week</h2>
+ <div class="proverb-card">
+  <p class="proverb-text">“Chi dorme non piglia pesci” – Those who sleep don't catch fish.</p>
 
-      <div class="proverb-card">
-        <p class="proverb-text">“A smooth sea never made a skilled sailor.”</p>
-
-        <div class="poll">
-          <p>How does this proverb feel to you?</p>
-          <button class="vote-btn" onclick="vote('positive')">😊 Positive</button>
-          <button class="vote-btn" onclick="vote('negative')">😕 Negative</button>
-        </div>
-
-        <div id="poll-results" class="poll-results" style="display: none;">
-          <p>Results:</p>
-          <p>Positive: <span id="positive-count">0</span></p>
-          <p>Negative: <span id="negative-count">0</span></p>
-        </div>
+  <!-- POLLCODE FORM (Styled for your site) -->
+  <form method="post" action="https://poll.pollcode.com/46556257" target="_blank">
+    <div style="
+      background-color: #fef7ed; 
+      padding: 16px; 
+      max-width: 500px; 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 16px; 
+      color: #333; 
+      border-radius: 12px; 
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1); 
+      margin: 20px auto;
+    ">
+      
+      <div style="padding-bottom: 12px;">
+        <strong>How does this proverb feel to you?</strong>
       </div>
+
+      <div style="margin-bottom: 8px;">
+        <input type="radio" name="answer" value="1" id="answer465562571" />
+        <label for="answer465562571" style="margin-left: 8px;">😊 Positive</label>
+      </div>
+
+      <div style="margin-bottom: 8px;">
+        <input type="radio" name="answer" value="2" id="answer465562572" />
+        <label for="answer465562572" style="margin-left: 8px;">😕 Negative</label>
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <input type="radio" name="answer" value="3" id="answer465562573" />
+        <label for="answer465562573" style="margin-left: 8px;">🤷‍♀️ Both
+</label>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 8px;">
+      <input type="submit" value="Vote" style="
+		  background-color: #EEC28F; 
+		  border: none; 
+		  padding: 8px 16px; 
+		  border-radius: 8px; 
+		  cursor: pointer; 
+		  font-weight: 600;
+		">
+
+       <input type="submit" name="view" value="View" formtarget="_blank" style="
+		  background-color: #ccc; 
+		  border: none; 
+		  padding: 8px 16px; 
+		  border-radius: 8px; 
+		  cursor: pointer; 
+		  font-weight: 600;
+		">
+
+      </div>
+
+      <div style="text-align: right; font-size: 12px; color: #666;">
+        pollcode.com <a href="https://pollcode.com/" style="color: #666;">free polls</a>
+      </div>
+
+    </div>
+  </form>
+  <!-- END POLLCODE FORM -->
+</div>
+
+
+     
     </div>
   </section>
 
@@ -89,98 +142,19 @@
         <a href="mailto:k.korre@athenarc.gr" title="Email">
           <i class="fas fa-envelope"></i> k.korre@athenarc.gr
         </a>
+		 <a href ="https://www.dropbox.com/scl/fi/xet7kfql0ww1mkky3g71e/katerina_korre_CV.pdf?rlkey=w65cnon62h06glx0zmm9xvc4e&st=oj3aht8e&dl=0" title="CV">
+		 <i class="fa fa-address-book"></i> CV
+         </a>		 
       </div>
     </div>
   </section>
 
-  <!-- JavaScript -->
-  <script>
-    let positiveVotes = 0;
-    let negativeVotes = 0;
 
-    function vote(type) {
-      if (type === 'positive') positiveVotes++;
-      else negativeVotes++;
 
-      // Show results
-      document.getElementById('poll-results').style.display = 'block';
-      document.getElementById('positive-count').textContent = positiveVotes;
-      document.getElementById('negative-count').textContent = negativeVotes;
-    }
-  </script>
 
   <footer>
     <p>© 2025 Katerina Korre — Built with ❤️ and GitHub Pages</p>
   </footer>
-  
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
-<script>
-// Your Firebase config goes here:
-const firebaseConfig = {
-  // PASTE YOUR CONFIG HERE
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// Proverb rotation
-const proverbs = [
-  "A smooth sea never made a skilled sailor.",
-  "When one door closes, another opens.",
-  "Knowledge is power.",
-  "Every cloud has a silver lining.",
-  "The beginning is always today."
-];
-
-function getWeekNumber() {
-  const now = new Date();
-  const yearStart = new Date(now.getFullYear(), 0, 1);
-  return Math.floor((now - yearStart) / (1000 * 60 * 60 * 24 * 7));
-}
-
-const weekNumber = getWeekNumber();
-const proverbIndex = weekNumber % proverbs.length;
-const currentProverb = proverbs[proverbIndex];
-
-document.querySelector(".proverb-text").textContent = currentProverb;
-
-// Load votes from Firestore
-db.collection("proverbs").doc(String(weekNumber)).get().then(doc => {
-  if (doc.exists) {
-    document.getElementById("positive-count").textContent = doc.data().positiveVotes;
-    document.getElementById("negative-count").textContent = doc.data().negativeVotes;
-  } else {
-    // Create a new document for this week
-    db.collection("proverbs").doc(String(weekNumber)).set({
-      text: currentProverb,
-      positiveVotes: 0,
-      negativeVotes: 0
-    });
-  }
-});
-
-// Voting function
-function vote(type) {
-  const docRef = db.collection("proverbs").doc(String(weekNumber));
-
-  db.runTransaction(async (transaction) => {
-    const doc = await transaction.get(docRef);
-    let data = doc.data();
-
-    if (type === "positive") data.positiveVotes++;
-    else data.negativeVotes++;
-
-    transaction.update(docRef, data);
-
-    document.getElementById("positive-count").textContent = data.positiveVotes;
-    document.getElementById("negative-count").textContent = data.negativeVotes;
-    document.getElementById("poll-results").style.display = "block";
-  });
-}
-</script>
   
 
 </body>
