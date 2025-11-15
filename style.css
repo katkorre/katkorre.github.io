@@ -9,14 +9,15 @@ body {
 
 /* ===== Navigation Bar ===== */
 header {
-  background: linear-gradient(to right, #E02F50, #E0642F); /* gradient */
+  background: linear-gradient(to right, #E02F50, #E0642F);
   color: white;
-  padding: 10px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* shadow */
+  padding: 5px 0; /* reduced from 10px to 5px */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
 }
+
 
 nav {
   width: 90%;
